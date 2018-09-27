@@ -1,42 +1,42 @@
 dist: trusty
 language: php
-
 branches:
-  # Only test the master branch and SemVer tags.
   only:
-    - master
-    - /^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+.*$/
-
+  - master
+  - "/^[[:digit:]]+\\.[[:digit:]]+\\.[[:digit:]]+.*$/"
 matrix:
   fast_finish: true
   include:
-    - php: 7.2
-      env: 'DEPENCENCIES=highest'
-    - php: 7.2
-    - php: 7.1
-    - php: 7.0.11
-    - php: 5.6
-      env: 'SCENARIO=phpunit5'
-    - php: 5.6
-      env: 'SCENARIO=phpunit5 DEPENDENCIES=lowest'
-
+  - php: 7.2
+    env: DEPENCENCIES=highest
+  - php: 7.2
+  - php: 7.1
+  - php: 7.0.11
+  - php: 5.6
+    env: SCENARIO=phpunit5
+  - php: 5.6
+    env: SCENARIO=phpunit5 DEPENDENCIES=lowest
 sudo: false
-
 cache:
   directories:
-    - $HOME/.composer/cache
-
+  - "$HOME/.composer/cache"
 install:
-  - 'composer scenario "${SCENARIO}" "${DEPENDENCIES}"'
-
+- composer scenario "${SCENARIO}" "${DEPENDENCIES}"
 script:
-  - composer test
-
+- composer test
 after_success:
-  - travis_retry php vendor/bin/php-coveralls -v
-
+- travis_retry php vendor/bin/php-coveralls -v
 before_deploy:
-  - composer phar:install-tools
-  - composer require --no-script consolidation/Robo
-  - composer install --prefer-dist --no-dev --no-interaction
-  - tools/box compile
+- composer phar:install-tools
+- composer require --no-script consolidation/Robo
+- composer install --prefer-dist --no-dev --no-interaction
+- tools/box compile
+deploy:
+  provider: releases
+  api_key:
+    secure: WL3HS6COmQaVseaV/OthQOVcG764GF6nslBGBlSh3S5IPWpsUv7iVOE1PTTLtXgl9BFWxkWCEWATUfc0KdOsDlhXIuYVWNscoWlpbBrw7Xvp/IQZrUbGDuuFLGukomeCd32NObMzNDTLooTOwr8F0duAXJlfpgBjCYygOIb6Y5DPt2k4k70a+96NSFZ6WR3LzSFrvvt1FTvw9vy2EBh7oG8duhIKChvO9nuKQNuBx7mWXzLktlxuKzMcM6JO5uLSxAXRZM8zI2uJnEEsdjR8A3HqC6LWi/kosXGYV/TW97e0CJ89M9S9vSFqw+LhPLoVU74FQ3TdKycorB8k9KtfkstFdSpJgh7v56HxS6ffSQ47W1NeeEhgVXGoXj6lTXNOjcrc7PxeJxVfBYMmBweJe7/pRaPPuSNFYAk2g5ujs77Wb1fQcoiP7oa65m/NEf9ca0CJnyI8tRg33US3SoGkTJk1VX23gV0Bfjg4EZVBrLw0P72QmKamLG269r72bgGethxglIfQk1Kcd5xuMwqeFjAnbwHUyy/0L/qCW/LlqUofEQ6sgJmJfo0OioxsS4/kSy/jdLkUfNcPwfTw3KXNSA3XglXGhgI5Y3FE9b58cBHvSwFKbYIEMj7zSg0ik3346tnM9ExEaX/875BJwgZVHlbTXH951NjJA6iF1HlxrIQ=
+  file: example.phar
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: greg-1-anderson/foozbiz3
