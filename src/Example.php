@@ -1,6 +1,6 @@
 <?php
 
-namespace ExampleProject;
+namespace Foozbiz3;
 
 class Example
 {
